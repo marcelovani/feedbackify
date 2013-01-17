@@ -15,10 +15,15 @@ function feedbackify_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implementation of hook_permission().
  */
-function feedbackify_perm() {
-  return array('administer feedbackify');
+function feedbackify_permission() {
+  return array(
+    'administer feedbackify' => array(
+      'title' => t('Administer Feedbackify'),
+      'description' => t('Perform administration tasks for Feedbackify.'),
+    ),
+  );
 }
 
 /**
@@ -26,9 +31,9 @@ function feedbackify_perm() {
  */
 function feedbackify_menu() {
   $items = array();
-  $items['admin/settings/feedbackify'] = array(
+  $items['admin/config/services/feedbackify'] = array(
     'title' => 'Feedbackify',
-    'description' => 'Configure the Feedbackify.',
+    'description' => 'Configure Feedbackify.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('feedbackify_settings_form'),
     'access arguments' => array('administer feedbackify'),
@@ -38,20 +43,20 @@ function feedbackify_menu() {
 }
 
 /**
- * Implementation of hook_footer() to insert Javascript at the end of the page.
+ * Implementation of hook_page_alter() to insert Javascript at the end of the page.
  */
-function feedbackify_footer() {
+function feedbackify_page_alter() {
   $feedbackify_id = check_plain(variable_get('feedbackify_id', ''));
   $feedbackify_pos = check_plain(variable_get('feedbackify_pos', 'right'));
   $feedbackify_color = check_plain(variable_get('feedbackify_color', '#237BAB'));
 
   if (!empty($feedbackify_id) && _feedbackify_visibility_pages()) {
     $script = 'document.write(unescape("%3Cscript src=\'" + document.location.protocol + "//fby.s3.amazonaws.com/fby.js\' type=\'text/javascript\'%3E%3C/script%3E"));';
-    drupal_add_js($script, 'inline', 'footer');
-    
+    drupal_add_js($script, array('type' => 'inline', 'scope' => 'footer'));
+
     // print Feedbackify label
     $script = 'FBY.showTab({id: \'' . $feedbackify_id . '\', position: \'' . $feedbackify_pos . '\', color: \'' . $feedbackify_color . '\'});';
-    drupal_add_js($script, 'inline', 'footer');
+    drupal_add_js($script, array('type' => 'inline', 'scope' => 'footer'));
   }
 }
 
@@ -83,7 +88,7 @@ function feedbackify_settings_form() {
       'right' => t('Right')
     ),
   );
-  
+
   $options = array(t('On every page except the listed pages.'), t('On the listed pages only.'));
   $description = t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>'));
   $pages = variable_get('feedbackify_pages', '');

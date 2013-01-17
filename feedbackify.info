@@ -1,3 +1,5 @@
 name = Feedbackify
 description = Integrates the Feedbackify service
-core = 6.x
+package = Statistics
+core = 7.x
+version = 7.x-1.0
