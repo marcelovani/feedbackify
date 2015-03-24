@@ -5,10 +5,9 @@
  */
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_install().
  */
 function feedbackify_install() {
-  variable_set('feedbackify_visibility', 0);
   $pages = array(
     'admin',
     'admin/*',
@@ -41,15 +40,15 @@ function feedbackify_install() {
     'user/*/edit/*',
     'node/*/revisions/view/*/*',
   );
-  variable_set('feedbackify_pages', implode("\n", $pages));
-  drupal_set_message(t('Feedbackify is now installed. Please take a second to !link.', array('!link' => l('configure it', 'admin/settings/feedbackify'))));
+  variable_set('feedbackify_visibility', 0);
+  variable_set('feedbackify_pages', implode(PHP_EOL, $pages));
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function feedbackify_uninstall() {
-  // remove module variables
+  // Remove module variables.
   variable_del('feedbackify_id');
   variable_del('feedbackify_pos');
   variable_del('feedbackify_color');

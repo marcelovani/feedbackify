@@ -14,14 +14,15 @@ function feedbackify_settings_form() {
     '#type' => 'textfield',
     '#title' => t('Feedbackify form ID'),
     '#default_value' => variable_get('feedbackify_id', NULL),
-    '#required' => TRUE
+    '#required' => TRUE,
   );
 
   $form['feedbackify_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Button color'),
     '#default_value' => variable_get('feedbackify_color', '#237BAB'),
-    '#description' => t('Please specify a hexadecimal color value like %color, or leave blank for transparent.', array('%color' => '#237BAB'))
+    '#description' => t('Please specify a hexadecimal color value like %color,
+      or leave blank for transparent.', array('%color' => '#237BAB')),
   );
 
   $form['feedbackify_pos'] = array(
@@ -30,12 +31,22 @@ function feedbackify_settings_form() {
     '#default_value' => variable_get('feedbackify_pos', 'right'),
     '#options' => array(
       'left' => t('Left'),
-      'right' => t('Right')
+      'right' => t('Right'),
     ),
   );
 
-  $options = array(t('On every page except the listed pages.'), t('On the listed pages only.'));
-  $description = t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>'));
+  $options = array(
+    t('On every page except the listed pages.'),
+    t('On the listed pages only.'),
+  );
+  $description = t("Enter one page per line as Drupal paths. The '*' character
+        is a wildcard. Example paths are %blog for the blog page and %blog-wildcard
+        for every personal blog. %front is the front page.", array(
+          '%blog' => 'blog',
+          '%blog-wildcard' => 'blog/*',
+          '%front' => '<front>',
+        )
+  );
   $pages = variable_get('feedbackify_pages', '');
   $visibility = variable_get('feedbackify_visibility', 0);
 

@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implements hook_help().
  */
 function feedbackify_help($path, $arg) {
   switch ($path) {
@@ -16,7 +16,7 @@ function feedbackify_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_permission().
+ * Implements hook_permission().
  */
 function feedbackify_permission() {
   return array(
@@ -28,7 +28,7 @@ function feedbackify_permission() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function feedbackify_menu() {
   $items = array();
@@ -45,12 +45,14 @@ function feedbackify_menu() {
 }
 
 /**
- * Implementation of hook_page_alter() to insert Javascript at the end of the page.
+ * Implements hook_page_alter().
+ *
+ * Insert Feedbackify JavaScript at the end of the page.
  */
 function feedbackify_page_alter() {
   $feedbackify_id = check_plain(variable_get('feedbackify_id', ''));
   if (!empty($feedbackify_id) && _feedbackify_visibility_pages()) {
-    
+
     $feedbackify_pos = check_plain(variable_get('feedbackify_pos', 'right'));
     $feedbackify_color = check_plain(variable_get('feedbackify_color', '#237BAB'));
 
@@ -68,7 +70,7 @@ function feedbackify_page_alter() {
 }
 
 /**
- * Function to determine if the Feedbackify code should be printed on the current page
+ * Determine if the Feedbackify code should be printed on the current page.
  */
 function _feedbackify_visibility_pages() {
   $visibility = variable_get('feedbackify_visibility', 0);
