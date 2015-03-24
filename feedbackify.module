@@ -51,12 +51,16 @@ function feedbackify_page_alter() {
   $feedbackify_color = check_plain(variable_get('feedbackify_color', '#237BAB'));
 
   if (!empty($feedbackify_id) && _feedbackify_visibility_pages()) {
-    $script = 'document.write(unescape("%3Cscript src=\'" + document.location.protocol + "//fby.s3.amazonaws.com/fby.js\' type=\'text/javascript\'%3E%3C/script%3E"));';
-    drupal_add_js($script, array('type' => 'inline', 'scope' => 'footer'));
+    $script = array();
+    $script[] = "var fby = fby || []";
+    $script[] = "fby.push(['showTab', {id: '$feedbackify_id', position: '$feedbackify_pos', color: '$feedbackify_color'}]);";
+    $script[] = "(function () {";
+    $script[] = "  var f = document.createElement('script'); f.type = 'text/javascript'; f.async = true;";
+    $script[] = "  f.src = '//cdn.feedbackify.com/f.js';";
+    $script[] = "  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(f, s);";
+    $script[] = "})();";
 
-    // print Feedbackify label
-    $script = 'FBY.showTab({id: \'' . $feedbackify_id . '\', position: \'' . $feedbackify_pos . '\', color: \'' . $feedbackify_color . '\'});';
-    drupal_add_js($script, array('type' => 'inline', 'scope' => 'footer'));
+    drupal_add_js(implode(PHP_EOL, $script), array('type' => 'inline', 'scope' => 'footer'));
   }
 }
 
