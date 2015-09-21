@@ -1,0 +1,6 @@
+name: Feedbackify
+type: module
+description: Integrates the Feedbackify service
+core: 8.x
+package: Statistics
+

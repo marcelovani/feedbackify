@@ -1,6 +1,0 @@
-name = Feedbackify
-description = Integrates the Feedbackify service
-package = Statistics
-configure = admin/config/services/feedbackify
-core = 7.x
-version = 7.x-1.0
