@@ -4,7 +4,6 @@
  * @file
  * Contains feedbackify.module.
  */
-
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -16,9 +15,62 @@ function feedbackify_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.feedbackify':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Integrates the Feedbackify service') . '</p>';
+      $output .= '<p>' . t('Please use your form ID from your Feedbackify account. See http://www.feedbackify.com for a demo and more information.') . '</p>';
       return $output;
 
     default:
   }
+}
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * @see: contextual_page_attachments_alter().
+ */
+function feedbackify_page_attachments_alter(array &$page) {
+  
+  // @todo: Implement.
+  // _feedbackify_visibility_pages();
+  
+//  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
+//    return;
+//  }
+
+  // @todo: Learn about default values for configuration(in case configuration form is never saved).
+  $page['#attached']['library'][] = 'feedbackify/feedbackify';
+  $page['#attached']['drupalSettings']['feedbackify'] = [
+    'feedbackifyId' => \Drupal::config('feedbackify.settings')->get('confs.feedbackify_id'),
+    'feedbackifyPos' => \Drupal::config('feedbackify.settings')->get('confs.feedbackify_position'),
+    'feedbackifyColor' => \Drupal::config('feedbackify.settings')->get('confs.feedbackify_color'),
+  ];
+}
+
+/**
+ * Helper function.
+ *
+ * Determine if the Feedbackify code should be printed on the current page.
+ * @todo Convert to drupal8 standards.
+ */
+function _feedbackify_visibility_pages() {
+  $visibility = variable_get('feedbackify_visibility', 0);
+  $pages = variable_get('feedbackify_pages', '');
+
+  // Match path if necessary.
+  if (!empty($pages)) {
+    $path = drupal_get_path_alias($_GET['q']);
+    // Compare with the internal and path alias (if any).
+    $page_match = drupal_match_path($path, $pages);
+    if ($path != $_GET['q']) {
+      $page_match = $page_match || drupal_match_path($_GET['q'], $pages);
+    }
+    // When $visibility has a value of 0, the block is displayed on
+    // all pages except those listed in $pages. When set to 1, it
+    // is displayed only on those pages listed in $pages.
+    $page_match = !($visibility xor $page_match);
+  }
+  else {
+    $page_match = TRUE;
+  }
+
+  return $page_match;
 }

@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 class FeedbackifySettingsForm extends ConfigFormBase {
@@ -23,13 +22,6 @@ class FeedbackifySettingsForm extends ConfigFormBase {
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
-
-  /**
-   * A database backend file usage overridable.
-   *
-   * @var \Drupal\file\FileUsage\FileUsageInterface
-   */
-  protected $fileUsage;
 
   /**
    * The entity manager.
@@ -45,15 +37,12 @@ class FeedbackifySettingsForm extends ConfigFormBase {
    *   The factory for configuration objects.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\file\FileUsage\FileUsageInterface
-   *   The file usage overridable.
    * @param \Drupal\Core\Entity\EntityManagerInterface
    *   The entity manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, FileUsageInterface $file_usage, EntityManagerInterface $entity_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
     parent::__construct($config_factory);
     $this->moduleHandler = $module_handler;
-    $this->fileUsage = $file_usage;
     $this->entityManager = $entity_manager;
   }
 
@@ -156,7 +145,7 @@ class FeedbackifySettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('feedbackify.settings');
-    $config->set('feedbackify_id', $form_state->getValue('feedbackify_id'))
+    $config->set('confs.feedbackify_id', $form_state->getValue('feedbackify_id'))
       ->set('confs.feedbackify_color', $form_state->getValue('feedbackify_color'))
       ->set('confs.feedbackify_position', $form_state->getValue('feedbackify_position'))
       ->set('advanced.feedbackify_visibility', $form_state->getValue('feedbackify_visibility'))
