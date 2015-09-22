@@ -88,6 +88,7 @@ class FeedbackifySettingsForm extends ConfigFormBase {
       '#title' => t('Feedbackify form ID'),
       //'#description' => t('Grab Feedbackify ID from ...'),
       '#default_value' => $feedbackify_config->get('feedbackify_id'),
+      '#required' => TRUE,
     );
     $form['settings'] = array(
       '#type' => 'vertical_tabs',
@@ -157,25 +158,24 @@ class FeedbackifySettingsForm extends ConfigFormBase {
     $config = $this->config('feedbackify.settings');
     $config->set('feedbackify_id', $form_state->getValue('feedbackify_id'))
       ->set('confs.feedbackify_color', $form_state->getValue('feedbackify_color'))
-      ->set('confs.feedbackify_color', $form_state->getValue('feedbackify_position'))
+      ->set('confs.feedbackify_position', $form_state->getValue('feedbackify_position'))
       ->set('advanced.feedbackify_visibility', $form_state->getValue('feedbackify_visibility'))
       ->set('advanced.feedbackify_pages', $form_state->getValue('feedbackify_pages'))
       ->save();
 
-    // Usefull.
-    //    if ($form_state->hasValue('disqus_api_delete')) {
-    //      $config->set('advanced.api.disqus_api_delete', $form_state->getValue('disqus_api_delete'))
-    //        ->save();
-    //    }
-    //    $old_logo = $config->get('advanced.sso.disqus_logo');
-    //    $new_logo = (!$form_state->isValueEmpty('disqus_logo')) ? $form_state->getValue(array(
-    //      'disqus_logo',
-    //      0
-//    )) : '';
-
-    // Ignore if the file hasn't changed.
-
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    // Ensure a hexadecimal color value.
+    if ($color = $form_state->getValue('feedbackify_color')) {
+      if (!preg_match('/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/', $color)) {
+        $form_state->setErrorByName('feedbackify_color', t('Button color must be a hexadecimal color value like %color, or left blank for transparent.', array('%color' => '#237BAB')));
+      }
+    }
   }
 
 }
