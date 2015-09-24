@@ -28,13 +28,14 @@ function feedbackify_help($route_name, RouteMatchInterface $route_match) {
  * @see: contextual_page_attachments_alter().
  */
 function feedbackify_page_attachments_alter(array &$page) {
-  
+
+  // Check for current user permissions.
+  if (!\Drupal::currentUser()->hasPermission('view feedbackify button')) {
+    return;
+  }
+
   // @todo: Implement.
   // _feedbackify_visibility_pages();
-  
-//  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
-//    return;
-//  }
 
   // @todo: Learn about default values for configuration(in case configuration form is never saved).
   $page['#attached']['library'][] = 'feedbackify/feedbackify';

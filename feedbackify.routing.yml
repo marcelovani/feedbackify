@@ -4,4 +4,4 @@ feedbackify.settings:
     _form: '\Drupal\feedbackify\Form\FeedbackifySettingsForm'
     _title: 'Feedbackify'
   requirements:
-     _permission: 'administer site configuration'
+     _permission: 'administer feedbackify'
