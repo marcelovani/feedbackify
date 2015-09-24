@@ -14,8 +14,8 @@ function feedbackify_help($route_name, RouteMatchInterface $route_match) {
     // Main module help for the feedbackify module.
     case 'help.page.feedbackify':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Please use your form ID from your Feedbackify account. See http://www.feedbackify.com for a demo and more information.') . '</p>';
+      $output .= '<h3>' . (string) t('About') . '</h3>';
+      $output .= '<p>' . (string) t('Please use your form ID from your Feedbackify account. See http://www.feedbackify.com for a demo and more information.') . '</p>';
       return $output;
 
     default:
@@ -25,7 +25,7 @@ function feedbackify_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_page_attachments().
  *
- * @see: contextual_page_attachments_alter().
+ * Add Feedbackify library if allowed.
  */
 function feedbackify_page_attachments_alter(array &$page) {
 
@@ -33,17 +33,26 @@ function feedbackify_page_attachments_alter(array &$page) {
   if (!\Drupal::currentUser()->hasPermission('view feedbackify button')) {
     return;
   }
+  dsm(\Drupal::service('router.admin_context'));
+  // Disallow adding the script on admin pages.
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
+    return;
+  }
 
   // @todo: Implement.
   // _feedbackify_visibility_pages();
 
-  // @todo: Learn about default values for configuration(in case configuration form is never saved).
-  $page['#attached']['library'][] = 'feedbackify/feedbackify';
-  $page['#attached']['drupalSettings']['feedbackify'] = [
-    'feedbackifyId' => \Drupal::config('feedbackify.settings')->get('confs.feedbackify_id'),
-    'feedbackifyPos' => \Drupal::config('feedbackify.settings')->get('confs.feedbackify_position'),
-    'feedbackifyColor' => \Drupal::config('feedbackify.settings')->get('confs.feedbackify_color'),
-  ];
+  $config = \Drupal::config('feedbackify.settings');
+
+  // Feedbackify id is a must configuration.
+  if($id = $config->get('confs.feedbackify_id')){
+    $page['#attached']['library'][] = 'feedbackify/feedbackify';
+    $page['#attached']['drupalSettings']['feedbackify'] = [
+      'feedbackifyId' => $id,
+      'feedbackifyPos' => $config->get('confs.feedbackify_position'),
+      'feedbackifyColor' => $config->get('confs.feedbackify_color'),
+    ];
+  }
 }
 
 /**

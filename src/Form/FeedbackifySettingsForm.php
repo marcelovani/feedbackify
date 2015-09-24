@@ -71,12 +71,12 @@ class FeedbackifySettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $feedbackify_config = $this->config('feedbackify.settings');
+    $config = $this->config('feedbackify.settings');
     $form['feedbackify_id'] = array(
       '#type' => 'textfield',
-      '#title' => t('Feedbackify form ID'),
-      //'#description' => t('Grab Feedbackify ID from ...'),
-      '#default_value' => $feedbackify_config->get('feedbackify_id'),
+      '#title' => (string) t('Feedbackify form ID'),
+      '#description' => (string) t('Grab Feedbackify ID your Feedbackify account.'),
+      '#default_value' => $config->get('confs.feedbackify_id'),
       '#required' => TRUE,
     );
     $form['settings'] = array(
@@ -86,50 +86,52 @@ class FeedbackifySettingsForm extends ConfigFormBase {
     // Behavior settings.
     $form['confs'] = array(
       '#type' => 'details',
-      '#title' => t('Configurations'),
+      '#title' => (string) t('Configurations'),
       '#group' => 'settings',
     );
     $form['confs']['feedbackify_color'] = array(
       '#type' => 'textfield',
-      '#title' => t('Button color'),
-      '#description' => t('Please specify a hexadecimal color value like %color,
+      '#title' => (string) t('Button color'),
+      '#description' => (string) t('Please specify a hexadecimal color value like %color,
       or leave blank for transparent.', array('%color' => '#237BAB')),
-      '#default_value' => $feedbackify_config->get('confs.feedbackify_color'),
+      '#default_value' => $config->get('confs.feedbackify_color'),
     );
     $form['confs']['feedbackify_position'] = array(
       '#type' => 'select',
-      '#title' => t('Button Position'),
+      '#title' => (string) t('Button Position'),
       '#options' => array(
-        'left' => t('Left'),
-        'right' => t('Right'),
+        'left' => (string) t('Left'),
+        'right' => (string) t('Right'),
       ),
-      '#description' => t('Please specify a hexadecimal color value like %color,
+      '#description' => (string) t('Please specify a hexadecimal color value like %color,
         or leave blank for transparent.', array('%color' => '#237BAB')),
-      '#default_value' => $feedbackify_config->get('confs.feedbackify_position'),
+      '#default_value' => $config->get('confs.feedbackify_position'),
     );
     // Advanced settings.
     $form['advanced'] = array(
       '#type' => 'details',
-      '#title' => t('Visibility'),
+      '#title' => (string) t('Visibility'),
       '#group' => 'settings',
-      '#description' => t(''),
+      '#description' => (string) t(''),
     );
     $form['advanced']['feedbackify_visibility'] = array(
       '#type' => 'radios',
-      '#title' => t('Display Feedbackify button'),
+      '#title' => (string) t('Display Feedbackify button'),
       '#options' => array(
-        t('On every page except the listed pages.'),
-        t('On the listed pages only.'),
+        (string) t('On every page except the listed pages.'),
+        (string) t('On the listed pages only.'),
       ),
-      '#default_value' => $feedbackify_config->get('advanced.feedbackify_visibility'),
+      '#default_value' => $config->get('advanced.feedbackify_visibility'),
     );
     $form['advanced']['feedbackify_pages'] = array(
       '#type' => 'textarea',
-      '#title' => t('Pages'),
-      '#default_value' => $feedbackify_config->get('advanced.feedbackify_pages'),
-      '#description' => t("Enter one page per line as Drupal paths. The '*' character
-        is a wildcard. Example paths are %blog for the blog page and %blog-wildcard
-        for every personal blog. %front is the front page.", array(
+      '#title' => (string) t('Pages'),
+      '#default_value' => $config->get('advanced.feedbackify_pages'),
+      '#description' => (string) t("Enter one page per line as Drupal paths.
+        The '*' character is a wildcard. Example paths are %blog for the blog
+        page and %blog-wildcard for every personal blog. %front is the front
+        page.<br/>
+        Note: The script will not be added on admin pages by default.", array(
         '%blog' => 'blog',
         '%blog-wildcard' => 'blog/*',
         '%front' => '<front>',
@@ -162,7 +164,7 @@ class FeedbackifySettingsForm extends ConfigFormBase {
     // Ensure a hexadecimal color value.
     if ($color = $form_state->getValue('feedbackify_color')) {
       if (!preg_match('/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/', $color)) {
-        $form_state->setErrorByName('feedbackify_color', t('Button color must be a hexadecimal color value like %color, or left blank for transparent.', array('%color' => '#237BAB')));
+        $form_state->setErrorByName('feedbackify_color', (string) t('Button color must be a hexadecimal color value like %color, or left blank for transparent.', array('%color' => '#237BAB')));
       }
     }
   }

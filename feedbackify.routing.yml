@@ -3,5 +3,7 @@ feedbackify.settings:
   defaults:
     _form: '\Drupal\feedbackify\Form\FeedbackifySettingsForm'
     _title: 'Feedbackify'
+  #options:
+   # _admin_route: TRUE
   requirements:
      _permission: 'administer feedbackify'
