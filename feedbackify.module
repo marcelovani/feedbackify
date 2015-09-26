@@ -5,6 +5,7 @@
  * Contains feedbackify.module.
  */
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -28,24 +29,27 @@ function feedbackify_help($route_name, RouteMatchInterface $route_match) {
  * Add Feedbackify library if allowed.
  */
 function feedbackify_page_attachments_alter(array &$page) {
-
   // Check for current user permissions.
   if (!\Drupal::currentUser()->hasPermission('view feedbackify button')) {
     return;
   }
-  dsm(\Drupal::service('router.admin_context'));
+
   // Disallow adding the script on admin pages.
   if (\Drupal::service('router.admin_context')->isAdminRoute()) {
     return;
   }
 
-  // @todo: Implement.
-  // _feedbackify_visibility_pages();
-
   $config = \Drupal::config('feedbackify.settings');
 
-  // Feedbackify id is a must configuration.
-  if($id = $config->get('confs.feedbackify_id')){
+  // Check for specified pages visibility rules.
+  if (!_feedbackify_visibility_pages($config)) {
+    return;
+  }
+
+  // Feedbackify ID is a must configuration.
+  if ($id = $config->get('confs.feedbackify_id')) {
+    // The JS actually needs to be added inline in order to make it work.
+    //@todo: Follow/Read https://www.drupal.org/node/2391025 for solution.
     $page['#attached']['library'][] = 'feedbackify/feedbackify';
     $page['#attached']['drupalSettings']['feedbackify'] = [
       'feedbackifyId' => $id,
@@ -58,25 +62,36 @@ function feedbackify_page_attachments_alter(array &$page) {
 /**
  * Helper function.
  *
- * Determine if the Feedbackify code should be printed on the current page.
- * @todo Convert to drupal8 standards.
+ * Determine if the Feedbackify code should be attached to the current page.
  */
-function _feedbackify_visibility_pages() {
-  $visibility = variable_get('feedbackify_visibility', 0);
-  $pages = variable_get('feedbackify_pages', '');
+function _feedbackify_visibility_pages($config) {
+  // Make it possible deactivate Feedbackify with
+  // parameter ?feedbackify=no in the url.
+  if (isset($_GET['feedbackify']) && $_GET['feedbackify'] == 'no') {
+    return FALSE;
+  }
+
+  $page_match = FALSE;
+  $pages = $config->get('advanced.feedbackify_pages');
 
   // Match path if necessary.
   if (!empty($pages)) {
-    $path = drupal_get_path_alias($_GET['q']);
-    // Compare with the internal and path alias (if any).
-    $page_match = drupal_match_path($path, $pages);
-    if ($path != $_GET['q']) {
-      $page_match = $page_match || drupal_match_path($_GET['q'], $pages);
+    // Compare the lowercase path alias (if any) and internal path.
+    $current_path = Url::fromRoute('<current>')->toString();
+    $path_alias = \Drupal::service('path.alias_manager')
+      ->getAliasByPath($current_path);
+    // Try to match the alias.
+    $page_match = \Drupal::service('path.matcher')
+      ->matchPath($path_alias, $pages);
+    if ($path_alias != $current_path) {
+      $page_match = $page_match || \Drupal::service('path.matcher')
+          ->matchPath($current_path, $pages);
     }
+
     // When $visibility has a value of 0, the block is displayed on
     // all pages except those listed in $pages. When set to 1, it
     // is displayed only on those pages listed in $pages.
-    $page_match = !($visibility xor $page_match);
+    $page_match = !($config->get('advanced.feedbackify_visibility') xor $page_match);
   }
   else {
     $page_match = TRUE;
