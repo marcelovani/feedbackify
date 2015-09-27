@@ -48,8 +48,6 @@ function feedbackify_page_attachments_alter(array &$page) {
 
   // Feedbackify ID is a must configuration.
   if ($id = $config->get('confs.feedbackify_id')) {
-    // The JS actually needs to be added inline in order to make it work.
-    //@todo: Follow/Read https://www.drupal.org/node/2391025 for solution.
     $page['#attached']['library'][] = 'feedbackify/feedbackify';
     $page['#attached']['drupalSettings']['feedbackify'] = [
       'feedbackifyId' => $id,
