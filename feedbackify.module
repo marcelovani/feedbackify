@@ -73,6 +73,11 @@ function feedbackify_page_alter() {
  * Determine if the Feedbackify code should be printed on the current page.
  */
 function _feedbackify_visibility_pages() {
+  // Exclude tag from admin pages.
+  if (path_is_admin(current_path())) {
+    return FALSE;
+  }
+
   $visibility = variable_get('feedbackify_visibility', 0);
   $pages = variable_get('feedbackify_pages', '');
 
