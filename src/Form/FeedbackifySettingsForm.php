@@ -2,56 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\disqus\Form\DisqusSettingsForm.
+ * Contains \Drupal\feedbackify\Form\FeedbackifySettingsForm.
  */
 
 namespace Drupal\feedbackify\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 class FeedbackifySettingsForm extends ConfigFormBase {
 
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
-   * Constructs a \Drupal\disqus\DisqusSettingsForm object.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The factory for configuration objects.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Entity\EntityManagerInterface
-   *   The entity manager.
-   */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
-    parent::__construct($config_factory);
-    $this->moduleHandler = $module_handler;
-    $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('config.factory'), $container->get('module_handler'), $container->get('file.usage'), $container->get('entity.manager'));
-  }
 
   /**
    * {@inheritdoc}
