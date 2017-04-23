@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\feedbackify\Form\FeedbackifySettingsForm.
- */
-
 namespace Drupal\feedbackify\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -34,8 +29,8 @@ class FeedbackifySettingsForm extends ConfigFormBase {
     $config = $this->config('feedbackify.settings');
     $form['feedbackify_id'] = array(
       '#type' => 'textfield',
-      '#title' => (string) t('Feedbackify form ID'),
-      '#description' => (string) t('Grab Feedbackify ID your Feedbackify account.'),
+      '#title' => (string) $this->t('Feedbackify form ID'),
+      '#description' => (string) $this->t('Grab Feedbackify ID your Feedbackify account.'),
       '#default_value' => $config->get('confs.feedbackify_id'),
       '#required' => TRUE,
     );
@@ -46,48 +41,48 @@ class FeedbackifySettingsForm extends ConfigFormBase {
     // Behavior settings.
     $form['confs'] = array(
       '#type' => 'details',
-      '#title' => (string) t('Configurations'),
+      '#title' => (string) $this->t('Configurations'),
       '#group' => 'settings',
     );
     $form['confs']['feedbackify_color'] = array(
       '#type' => 'textfield',
-      '#title' => (string) t('Button color'),
-      '#description' => (string) t('Please specify a hexadecimal color value like %color,
+      '#title' => (string) $this->t('Button color'),
+      '#description' => (string) $this->t('Please specify a hexadecimal color value like %color,
       or leave blank for transparent.', array('%color' => '#237BAB')),
       '#default_value' => $config->get('confs.feedbackify_color'),
     );
     $form['confs']['feedbackify_position'] = array(
       '#type' => 'select',
-      '#title' => (string) t('Button Position'),
+      '#title' => (string) $this->t('Button Position'),
       '#options' => array(
-        'left' => (string) t('Left'),
-        'right' => (string) t('Right'),
+        'left' => (string) $this->t('Left'),
+        'right' => (string) $this->t('Right'),
       ),
-      '#description' => (string) t('Please specify a hexadecimal color value like %color,
+      '#description' => (string) $this->t('Please specify a hexadecimal color value like %color,
         or leave blank for transparent.', array('%color' => '#237BAB')),
       '#default_value' => $config->get('confs.feedbackify_position'),
     );
     // Advanced settings.
     $form['advanced'] = array(
       '#type' => 'details',
-      '#title' => (string) t('Visibility'),
+      '#title' => (string) $this->t('Visibility'),
       '#group' => 'settings',
-      '#description' => (string) t(''),
+      '#description' => (string) $this->t(''),
     );
     $form['advanced']['feedbackify_visibility'] = array(
       '#type' => 'radios',
-      '#title' => (string) t('Display Feedbackify button'),
+      '#title' => (string) $this->t('Display Feedbackify button'),
       '#options' => array(
-        (string) t('On every page except the listed pages.'),
-        (string) t('On the listed pages only.'),
+        (string) $this->t('On every page except the listed pages.'),
+        (string) $this->t('On the listed pages only.'),
       ),
       '#default_value' => $config->get('advanced.feedbackify_visibility'),
     );
     $form['advanced']['feedbackify_pages'] = array(
       '#type' => 'textarea',
-      '#title' => (string) t('Pages'),
+      '#title' => (string) $this->t('Pages'),
       '#default_value' => $config->get('advanced.feedbackify_pages'),
-      '#description' => (string) t("Enter one page per line as Drupal paths.
+      '#description' => (string) $this->t("Enter one page per line as Drupal paths.
         The '*' character is a wildcard. Example paths are %blog for the blog
         page and %blog-wildcard for every personal blog. %front is the front
         page.<br/>
